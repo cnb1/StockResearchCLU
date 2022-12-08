@@ -2,5 +2,8 @@
     "name": "forecast",
     "executions" : [
         "stocks"
-    ]
+    ],
+    "stocks": {
+        "filename": "executions.forecast"
+    }
 }
