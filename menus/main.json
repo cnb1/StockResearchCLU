@@ -1,5 +1,6 @@
 {
-    "children" : [
+    "name" : "main",
+    "menus" : [
         "forecast",
         "financials"
     ]

@@ -1,0 +1,6 @@
+{
+    "name": "forecast",
+    "executions" : [
+        "stocks"
+    ]
+}
