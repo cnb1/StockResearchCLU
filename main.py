@@ -15,7 +15,6 @@ if __name__ == "__main__":
 
     list.append(mainjson)
 
-
     while isRun:
         
         command = input(Fore.YELLOW + pf.createConsole(list) + Fore.WHITE)
