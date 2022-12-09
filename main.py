@@ -46,7 +46,7 @@ if __name__ == "__main__":
             else :
                 if pf.checkExecutions(command, list[list.__len__()-1]):
                     print("execution found")
-                    # TODO create a new thread here that executes the execution
+                    
                     t = threading.Thread(target=thread_func, args=(command, list[list.__len__()-1]))
                     t.start()
                     t.join()
