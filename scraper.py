@@ -16,10 +16,9 @@ dfcol = [MIN_FORECAST, AVG_FORECAST, MAX_FORECAST,
         A1YF + ' EPS', A2YF + ' EPS', A3YF + ' EPS',
         A1YF + ' Rev', A2YF + ' Rev', A3YF + ' Rev']
 
-dfdata = []
-
 def forecast(ticker) :
-
+    #TODO do a check of nasdaq url or nyse for the url creation
+    print('running ticker '+ ticker)
     url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str(ticker) + '/stock-forecast'
 
     data = requests.get(url)
@@ -30,6 +29,8 @@ def forecast(ticker) :
     isRev1 = False
     isRev2 = False
     isRev3 = False
+
+    dfdata = []
 
 
     for tag in tags:

@@ -27,6 +27,7 @@ if __name__ == "__main__":
     mainjson = json.load(mainfile)
 
     list.append(mainjson)
+    print(list)
 
     while isRun:
         

@@ -6,10 +6,17 @@ sys.path.append(parentdir)
 import scraper
 
 
-#TODO get this import to work
 def stockForecast():
-    print("stock forecast")
-    #TODO: create the python web scrapper for the zacks information
-    # input stock
-    ticker = input()
-    scraper.forecast(ticker)
+    # TODO create looping for this inputs
+    print(list)
+
+    isRun = True
+    while isRun:
+        ticker = input()
+        print('ticker is: ' + ticker)
+        if ticker == "!q":
+            isRun = False
+        else:
+            scraper.forecast(ticker)
+
+        print()
