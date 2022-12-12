@@ -1,3 +1,4 @@
+from importlib.resources import contents
 from string import whitespace
 import requests
 from bs4 import BeautifulSoup as bs
@@ -21,74 +22,39 @@ dfcol = [MIN_FORECAST, AVG_FORECAST, MAX_FORECAST,
         A1YF + ' EPS', A2YF + ' EPS', A3YF + ' EPS',
         A1YF + ' Rev', A2YF + ' Rev', A3YF + ' Rev']
 
-if __name__ == '__main__':
-    #TODO do a check of nasdaq url or nyse for the url creation
-    url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str('tsla') + '/stock-forecast'
+def scrap():
+        #TODO do a check of nasdaq url or nyse for the url creation
+    url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str('aapl') + '/'
 
     data = requests.get(url)
 
     html = bs(data.text, 'html.parser')
-    tags = html.find_all('div', {"class": "jss172"})
+    tags = html.find('div', {"class": "MuiContainer-root jss3 MuiContainer-maxWidthXl"})
+    spansval = tags.findAll('div', {'class':'MuiTypography-root MuiTypography-h4'})
+    
+    spanstitle = tags.findAll('div', {'class':'MuiTypography-root MuiTypography-h6'})
 
-    if len(tags) == 0:
-        url = 'https://www.wallstreetzen.com/stocks/us/nyse/' + str('f') + '/stock-forecast'
-        data = requests.get(url)
+    title = html.find('h1', {"class": "MuiTypography-root jss109 MuiTypography-h1"})
 
-        html = bs(data.text, 'html.parser')
-        tags = html.find_all('div', {"class": "jss172"})
-
-
-    isRev1 = False
-    isRev2 = False
-    isRev3 = False
-
-    dfdata = []
-
-    title = html.find('title')
-    print()
-    print(Fore.GREEN + title.contents[0].split('Forecast')[0] + Fore.WHITE)
-
-
-    for tag in tags:
-        temp = tag.find_next(string=True)
-        tempval = tag.contents[1].find_next(string=True)
-
-
-        if temp == MIN_FORECAST:
-            dfdata.append(tempval)
-
-        elif temp == AVG_FORECAST:
-            dfdata.append(tempval)
-
-        elif temp == MAX_FORECAST:
-            dfdata.append(tempval)
-
-        elif temp == A1YF:
-            if not isRev1 :
-                isRev1 = True
-                dfdata.append(tempval)
-            else:
-                dfdata.append(tempval)
-                
-        elif temp == A2YF:
-            if not isRev2 :
-                isRev2 = True
-                dfdata.append(tempval)
-            else:
-                dfdata.append(tempval)
-
-        elif temp == A3YF:
-            if not isRev3 :
-                isRev3 = True
-                dfdata.append(tempval)
-            else:
-                dfdata.append(tempval)
-
-
+    print(title.contents[1])
+    dftitle = pd.DataFrame(data={'Company':[title.contents[1]]})
+    # print(dftitle.to_string(index=False))
     dict = {}
-    for i in range(len(dfcol)):
-        dict[dfcol[i]] = [dfdata[i]]
+
+    for i in range(len(spanstitle)):
+        dict[spanstitle[i].find_next(string=True)] = [spansval[i].find_next(string=True)]
+
     df = pd.DataFrame(data=dict)
+    ticker = 'aapl'
     print()
-    print(Fore.LIGHTCYAN_EX + tabulate(df, headers='keys', tablefmt="double_outline") + Fore.WHITE)
+    # print(Fore.LIGHTCYAN_EX + tabulate(df, headers='keys', tablefmt="double_outline", showindex=False) + Fore.WHITE)
     print()
+    print(dict[ticker.upper() + ' Price'])
+
+    return df, dftitle
+
+
+if __name__ == '__main__':
+    df, dftitle = scrap()
+    print(dftitle.to_string(index=False))
+    print(Fore.LIGHTCYAN_EX + tabulate(df, headers='keys', tablefmt="double_outline", showindex=False) + Fore.WHITE)
