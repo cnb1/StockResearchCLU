@@ -11,7 +11,7 @@ filename = 'filename'
 def thread_func(command, menuList):
 
     tocall = importlib.import_module(menuList[command][filename])
-    tocall.stockForecast(list)
+    tocall.run(list)
 
 
 if __name__ == "__main__":

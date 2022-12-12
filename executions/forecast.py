@@ -9,8 +9,7 @@ import printFunctions as pf
 
 
 
-def stockForecast(list):
-    # TODO create looping for this inputs
+def run(list):
     isRun = True
     while isRun:
         ticker = input(Fore.YELLOW + pf.createConsole(list, 'stock') + Fore.WHITE)
