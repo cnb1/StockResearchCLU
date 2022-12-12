@@ -1,9 +1,13 @@
+from string import whitespace
 import requests
 from bs4 import BeautifulSoup as bs
 from pprint import pprint
 import pandas as pd
 from tabulate import tabulate
 from colorama import Fore
+
+def col(x):
+    return ['background-color: yellow'] * 4
 
 MIN_FORECAST = 'Min Forecast'
 AVG_FORECAST = 'Avg Forecast'
@@ -17,9 +21,9 @@ dfcol = [MIN_FORECAST, AVG_FORECAST, MAX_FORECAST,
         A1YF + ' EPS', A2YF + ' EPS', A3YF + ' EPS',
         A1YF + ' Rev', A2YF + ' Rev', A3YF + ' Rev']
 
-def forecast(ticker) :
+if __name__ == '__main__':
     #TODO do a check of nasdaq url or nyse for the url creation
-    url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str(ticker) + '/stock-forecast'
+    url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str('tsla') + '/stock-forecast'
 
     data = requests.get(url)
 
@@ -27,7 +31,7 @@ def forecast(ticker) :
     tags = html.find_all('div', {"class": "jss172"})
 
     if len(tags) == 0:
-        url = 'https://www.wallstreetzen.com/stocks/us/nyse/' + str(ticker) + '/stock-forecast'
+        url = 'https://www.wallstreetzen.com/stocks/us/nyse/' + str('f') + '/stock-forecast'
         data = requests.get(url)
 
         html = bs(data.text, 'html.parser')
@@ -41,6 +45,8 @@ def forecast(ticker) :
     dfdata = []
 
     title = html.find('title')
+    print()
+    print(Fore.GREEN + title.contents[0].split('Forecast')[0] + Fore.WHITE)
 
 
     for tag in tags:

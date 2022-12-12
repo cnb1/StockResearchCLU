@@ -4,16 +4,16 @@ parentdir = os.path.dirname(currentdir)
 sys.path.append(parentdir)
 
 import scraper
+from colorama import Fore
+import printFunctions as pf
 
 
-def stockForecast():
+
+def stockForecast(list):
     # TODO create looping for this inputs
-    print(list)
-
     isRun = True
     while isRun:
-        ticker = input()
-        print('ticker is: ' + ticker)
+        ticker = input(Fore.YELLOW + pf.createConsole(list, 'stock') + Fore.WHITE)
         if ticker == "!q":
             isRun = False
         else:

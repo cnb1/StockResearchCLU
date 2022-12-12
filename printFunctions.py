@@ -50,11 +50,14 @@ def checkExecutions(command, menuList):
 
     return False
 
-def createConsole(list):
+def createConsole(list, added = None):
     
     consoleout = ""
 
     for i in list:
         consoleout += '/' + i['name']
 
-    return consoleout + ' > '
+    if added is None:
+        return consoleout + ' > '
+    else:
+        return consoleout + '/' + added + ' > '
