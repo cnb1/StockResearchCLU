@@ -8,6 +8,18 @@ import printFunctions as pf
 
 filename = 'filename'
 
+
+# TODO 
+# 1) add financials feature
+# 2) add view stock chart feature
+# 3) add other features for forecast visualizations
+#
+#
+#
+#
+#
+
+
 def thread_func(command, menuList):
 
     tocall = importlib.import_module(menuList[command][filename])
