@@ -16,7 +16,7 @@ import pandas as pd
 def run(list):
     isRun = True
     while isRun:
-        ticker = input(Fore.YELLOW + pf.createConsole(list, 'stock') + Fore.WHITE)
+        ticker = input(Fore.YELLOW + pf.createConsole(list, 'forecast/[Enter Ticker]') + Fore.WHITE)
         if ticker == "!q":
             isRun = False
         else:

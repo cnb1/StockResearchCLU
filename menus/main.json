@@ -1,7 +1,7 @@
 {
     "name" : "main",
     "menus" : [
-        "forecast",
+        "metrics",
         "financials"
     ]
 }
