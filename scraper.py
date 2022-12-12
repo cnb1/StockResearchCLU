@@ -22,7 +22,10 @@ def forecastStock(ticker, return_val) :
 
     url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str(ticker) + '/stock-forecast'
 
+    start1 = time.time()
     data = requests.get(url)
+    end1 = time.time()
+    print("forecastStock 1 :", (end1-start1) * 10**3, "ms")
 
     html = bs(data.text, 'html.parser')
     tags = html.find_all('div', {"class": "jss172"})

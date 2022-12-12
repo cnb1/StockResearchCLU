@@ -1,9 +1,13 @@
 {
     "name": "metrics",
     "executions" : [
-        "forecast"
+        "forecast",
+        "ratios"
     ],
     "forecast": {
         "filename": "executions.forecast"
+    },
+    "ratios": {
+        "filename": "executions.ratios"
     }
 }

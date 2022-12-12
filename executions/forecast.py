@@ -20,7 +20,7 @@ def run(list):
         if ticker == "!q":
             isRun = False
         else:
-            # start = time.time ()
+            start = time.time()
             return_val_stats = [None]*2
             return_val_forecast = [None]*1
             #thread with returning df
@@ -45,8 +45,8 @@ def run(list):
             # df = pd.DataFrame(data=return_val_forecast[0])
             print(Fore.LIGHTCYAN_EX + tabulate(return_val_forecast[0], headers='keys', tablefmt="double_outline", showindex=False) + Fore.WHITE)
 
-            # end = time.time()
+            end = time.time()
 
-            # print("The time of execution of above program is :", (end-start) * 10**3, "ms")
+            print("The time of execution of above program is :", (end-start) * 10**3, "ms")
 
         print()
