@@ -4,7 +4,6 @@ from pprint import pprint
 import pandas as pd
 from tabulate import tabulate
 from colorama import Fore
-import time
 
 MIN_FORECAST = 'Min Forecast'
 AVG_FORECAST = 'Avg Forecast'
@@ -22,10 +21,7 @@ def forecastStock(ticker, return_val) :
 
     url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str(ticker) + '/stock-forecast'
 
-    start1 = time.time()
     data = requests.get(url)
-    end1 = time.time()
-    print("forecastStock 1 :", (end1-start1) * 10**3, "ms")
 
     html = bs(data.text, 'html.parser')
     tags = html.find_all('div', {"class": "jss172"})
@@ -127,13 +123,13 @@ def generalStats(ticker, return_val):
     spanstitle = tags.findAll('div', {'class':'MuiTypography-root MuiTypography-h6'})
 
     dict = {}
+    price = ticker.upper() + ' Price'
+    rev = 'Revenue'
 
     for i in range(len(spanstitle)):
-        dict[spanstitle[i].find_next(string=True)] = [spansval[i].find_next(string=True)]
+        if spanstitle[i].find_next(string=True) == price or spanstitle[i].find_next(string=True) == rev:
+            dict[spanstitle[i].find_next(string=True)] = [spansval[i].find_next(string=True)]
 
     df = pd.DataFrame(data=dict)
     return_val[0] = df
     return_val[1] = dftitle
-    # print()
-    
-    # print()

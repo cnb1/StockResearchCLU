@@ -10,7 +10,6 @@ filename = 'filename'
 
 
 # TODO 
-# - try and make forecast faster
 # - reduce the top DF to only have price eps and rev
 # - create feature so that i type dynamic and i can do -f ticker for forecast and -r ticker for ratios 
 #   allows me to switch between metrics and any of the rest of the commands each execution has its own unique key
