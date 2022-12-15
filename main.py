@@ -3,13 +3,17 @@ import json
 import threading
 import importlib
 from colorama import Fore
+from rich.console import Console
 
 import printFunctions as pf
+import cache.stockCache as sc
+import time
 
 filename = 'filename'
 
 
 # TODO 
+# - Dont store the rich table store the dataframes instead rich tables is ~1.4MB
 # - make scraper better for forecast for tag MuiCardContent-root
 # - do financials
 
@@ -32,6 +36,12 @@ def thread_func(command, menuList):
 
 
 if __name__ == "__main__":
+
+    console = Console()
+    # load persistant cache
+    with console.status("[bold green]Loading cache...") as status:
+        time.sleep(2)
+        sc.load()
 
     pf.printName()
 

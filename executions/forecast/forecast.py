@@ -15,8 +15,9 @@ from colorama import Fore
 import pandas as pd
 from rich.console import Console
 from rich.table import Table
-import cache.stockCache as stockCache
+import cache.stockCache as sc
 
+FILENAME = 'forecast'
 
 def run(list):
     isRun = True
@@ -30,14 +31,13 @@ def run(list):
         else:
             with console.status("[bold green]Fetching data...") as status:
                 # here check cache for dataframe
-                checkKey = ticker + '-forecast'
 
                 start = time.time()
 
                 #local cache feature
-                if checkKey in stockCache.dict:
+                if sc.checkObjKey(ticker, FILENAME):
                     print()
-                    console.print(stockCache.dict[checkKey])
+                    console.print(sc.getObj(ticker, FILENAME).getTable())
                     print()
                     print()
                     end = time.time()
@@ -79,8 +79,4 @@ def run(list):
                 print()
                 print()
 
-                stockCache.dict[checkKey] = table
-
-
-if __name__ == '__main__':
-    print('hello')
+                sc.setObj(ticker, FILENAME, table)
