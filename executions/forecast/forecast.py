@@ -15,7 +15,7 @@ from colorama import Fore
 import pandas as pd
 from rich.console import Console
 from rich.table import Table
-import cache.stock_cache as stock_cache
+import cache.stockCache as stockCache
 
 
 def run(list):
@@ -35,9 +35,9 @@ def run(list):
                 start = time.time()
 
                 #local cache feature
-                if checkKey in stock_cache.dict:
+                if checkKey in stockCache.dict:
                     print()
-                    console.print(stock_cache.dict[checkKey])
+                    console.print(stockCache.dict[checkKey])
                     print()
                     print()
                     end = time.time()
@@ -79,7 +79,7 @@ def run(list):
                 print()
                 print()
 
-                stock_cache.dict[checkKey] = table
+                stockCache.dict[checkKey] = table
 
 
 if __name__ == '__main__':
