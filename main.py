@@ -21,7 +21,8 @@ filename = 'filename'
 # - create all in one report feature 
 # - add other features for forecast visualizations
 # - background thread that loads all last 7 days requested items and eliminates past
-#   7 days items. uses these items to reduce requests made
+#   7 days items. uses these items to reduce requests made (how to store python objects locally)
+# - stock market index valuations
 
 
 def thread_func(command, menuList):

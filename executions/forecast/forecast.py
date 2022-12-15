@@ -15,7 +15,7 @@ from colorama import Fore
 import pandas as pd
 from rich.console import Console
 from rich.table import Table
-import stock_cache
+import cache.stock_cache as stock_cache
 
 
 def run(list):
