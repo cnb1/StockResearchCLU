@@ -10,8 +10,9 @@ filename = 'filename'
 
 
 # TODO 
+# - make scraper better for forecast for tag MuiCardContent-root
 # - create cache module for reoccuring requests to speed up
-# - use rich for the nicer charts
+#
 
 
 

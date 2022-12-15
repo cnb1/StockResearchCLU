@@ -1,4 +1,5 @@
 import os, sys
+from tabnanny import check
 currentdir = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(os.path.dirname(currentdir))
 sys.path.append(parentdir)
@@ -14,6 +15,7 @@ from colorama import Fore
 import pandas as pd
 from rich.console import Console
 from rich.table import Table
+import stock_cache
 
 
 def run(list):
@@ -27,8 +29,22 @@ def run(list):
             isRun = False
         else:
             with console.status("[bold green]Fetching data...") as status:
+                # here check cache for dataframe
+                checkKey = ticker + '-forecast'
 
                 start = time.time()
+
+                #local cache feature
+                if checkKey in stock_cache.dict:
+                    print()
+                    console.print(stock_cache.dict[checkKey])
+                    print()
+                    print()
+                    end = time.time()
+                    print("The time of execution of above program is :", (end-start) * 10**3, "ms")
+                    continue
+
+
                 return_val_stats = [None]*2
                 return_val_forecast = [None]*1
                 #thread with returning df
@@ -40,27 +56,30 @@ def run(list):
                 tforecast.start()
                 tstats.join()
                 tforecast.join()
-            
 
-                end = time.time()
+                if return_val_forecast[0] is None:
+                    continue
 
-                table2 = Table(title=return_val_stats[1].head(1).iloc[0].iloc[0])
+                table = Table(title=return_val_stats[1].head(1).iloc[0].iloc[0])
 
-                table2.add_column('Metric', style='dodger_blue2', no_wrap=True)
-                table2.add_column('Value', style='deep_sky_blue1', no_wrap=True)
+                table.add_column('Metric', style='dodger_blue2', no_wrap=True)
+                table.add_column('Value', style='deep_sky_blue1', no_wrap=True)
 
                 for i in range(len(return_val_stats[0].columns)):
-                    table2.add_row(return_val_stats[0].columns[i], return_val_stats[0].iloc[0].iloc[i])
+                    table.add_row(return_val_stats[0].columns[i], return_val_stats[0].iloc[0].iloc[i])
 
                 for i in range(len(return_val_forecast[0].columns)):
-                    table2.add_row(return_val_forecast[0].columns[i], return_val_forecast[0].iloc[0].iloc[i])
+                    table.add_row(return_val_forecast[0].columns[i], return_val_forecast[0].iloc[0].iloc[i])
 
                 print()
-                console.print(table2)
+                console.print(table)
 
+                end = time.time()
                 print("The time of execution of above program is :", (end-start) * 10**3, "ms")
                 print()
                 print()
+
+                stock_cache.dict[checkKey] = table
 
 
 if __name__ == '__main__':

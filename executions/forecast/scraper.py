@@ -34,7 +34,6 @@ def forecastStock(ticker, return_val) :
         tags = html.find_all('div', {"class": "jss172"})
 
     if tags == None or len(tags) == 0:
-        print('Equity ' + ticker + ' not found')
         return
 
 
