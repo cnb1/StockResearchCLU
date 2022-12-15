@@ -5,7 +5,7 @@
         "ratios"
     ],
     "forecast": {
-        "filename": "executions.forecast"
+        "filename": "executions.forecast.forecast"
     },
     "ratios": {
         "filename": "executions.ratios"

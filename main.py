@@ -10,6 +10,11 @@ filename = 'filename'
 
 
 # TODO 
+# - create cache module for reoccuring requests to speed up
+# - use rich for the nicer charts
+
+
+
 # - reduce the top DF to only have price eps and rev
 # - create feature so that i type dynamic and i can do -f ticker for forecast and -r ticker for ratios 
 #   allows me to switch between metrics and any of the rest of the commands each execution has its own unique key
@@ -17,9 +22,6 @@ filename = 'filename'
 # - add view stock chart feature
 # - create all in one report feature 
 # - add other features for forecast visualizations
-#
-#
-#
 #
 #
 

@@ -1,7 +1,8 @@
 import os, sys
 currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
+parentdir = os.path.dirname(os.path.dirname(currentdir))
 sys.path.append(parentdir)
+sys.path.append(currentdir)
 
 import scraper
 from colorama import Fore
@@ -50,3 +51,6 @@ def run(list):
             print("The time of execution of above program is :", (end-start) * 10**3, "ms")
 
         print()
+
+if __name__ == '__main__':
+    print('hello')
