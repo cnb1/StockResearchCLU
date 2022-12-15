@@ -11,10 +11,7 @@ filename = 'filename'
 
 # TODO 
 # - make scraper better for forecast for tag MuiCardContent-root
-# - create cache module for reoccuring requests to speed up
-#
-
-
+# - do financials
 
 # - reduce the top DF to only have price eps and rev
 # - create feature so that i type dynamic and i can do -f ticker for forecast and -r ticker for ratios 
@@ -23,8 +20,8 @@ filename = 'filename'
 # - add view stock chart feature
 # - create all in one report feature 
 # - add other features for forecast visualizations
-#
-#
+# - background thread that loads all last 7 days requested items and eliminates past
+#   7 days items. uses these items to reduce requests made
 
 
 def thread_func(command, menuList):
