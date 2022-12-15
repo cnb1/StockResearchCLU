@@ -7,6 +7,9 @@ import pandas as pd
 from tabulate import tabulate
 from colorama import Fore
 
+from rich.console import Console
+from time import sleep
+
 def col(x):
     return ['background-color: yellow'] * 4
 
@@ -55,6 +58,31 @@ def scrap():
 
 
 if __name__ == '__main__':
-    df, dftitle = scrap()
-    print(dftitle.to_string(index=False))
-    print(Fore.LIGHTCYAN_EX + tabulate(df, headers='keys', tablefmt="double_outline", showindex=False) + Fore.WHITE)
+    # df, dftitle = scrap()
+    # print(dftitle.to_string(index=False))
+    # print(Fore.LIGHTCYAN_EX + tabulate(df, headers='keys', tablefmt="double_outline", showindex=False) + Fore.WHITE)
+    data = pd.DataFrame({
+    "id": [7058],
+    "name": ['ramya'],
+    "subjects": ['php/js']
+    }
+    )
+    
+    # get first row using head() function
+    print(data.columns[0])
+    print(data.iloc[0].iloc[1])
+    print(data)
+
+    for i in range(len(data.columns)):
+        print(i)
+    
+    console = Console()
+
+    data = [1, 2, 3, 4, 5]
+    with console.status("[bold green]Fetching data...") as status:
+        while data:
+            num = data.pop(0)
+            sleep(1)
+            console.log(f"[green]Finish fetching data[/green] {num}")
+
+        console.log(f'[bold][red]Done!')
