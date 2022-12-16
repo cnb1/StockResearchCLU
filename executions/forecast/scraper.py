@@ -43,8 +43,6 @@ def forecastStock(ticker, return_val) :
 
     dfdata = []
 
-    title = html.find('title')
-
 
     for tag in tags:
         temp = tag.find_next(string=True)

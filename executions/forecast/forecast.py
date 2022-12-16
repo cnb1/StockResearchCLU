@@ -18,8 +18,10 @@ from rich.table import Table
 import cache.stockCache as sc
 
 FILENAME = 'forecast'
+METRICS = 'Metrics'
+VALUES = 'Values'
 
-def __createDataframe(header, values, forecast):
+def __createValuesAndMetrics(header, values, forecast):
     dataMetric = []
     dataValue = []
 
@@ -35,28 +37,29 @@ def __createDataframe(header, values, forecast):
         dataValue.append(forecast.iloc[0].iloc[i])
 
     data = {
-        'Metrics': dataMetric,
-        'Values': dataValue
+        METRICS: dataMetric,
+        VALUES: dataValue
     }
 
+    return data
+
+def __createDataframe(data):
     dfdata = pd.DataFrame(data)
     return dfdata
 
 def __printDataframe(df):
-    print('dataframe: \n', df)
-    # table = Table(title=return_val_stats[1].head(1).iloc[0].iloc[0])
+    console = Console()
+    table = Table(title=df[VALUES].iloc[0])
 
-    # table.add_column('Metric', style='dodger_blue2', no_wrap=True)
-    # table.add_column('Value', style='deep_sky_blue1', no_wrap=True)
+    table.add_column(METRICS, style='dodger_blue2', no_wrap=True)
+    table.add_column(VALUES, style='deep_sky_blue1', no_wrap=True)
 
-    # for i in range(len(return_val_stats[0].columns)):
-    #     table.add_row(return_val_stats[0].columns[i], return_val_stats[0].iloc[0].iloc[i])
+    for i in range(len(df.index)):
+        table.add_row(df[METRICS].iloc[i], df[VALUES].iloc[i])
 
-    # for i in range(len(return_val_forecast[0].columns)):
-    #     table.add_row(return_val_forecast[0].columns[i], return_val_forecast[0].iloc[0].iloc[i])
 
-    # print()
-    # console.print(table)
+    print()
+    console.print(table)
 
 def run(list):
     isRun = True
@@ -68,40 +71,39 @@ def run(list):
         if ticker == "!q":
             isRun = False
         else:
-            with console.status("[bold green]Fetching data...") as status:
-                # here check cache for dataframe
+        
+            # here check cache for dataframe
+            start = time.time()
 
-                start = time.time()
+            #local cache feature
+            if sc.checkObjKey(ticker, FILENAME):
+                print()
+                df = __createDataframe(sc.getObj(ticker, FILENAME).getTable())
+                __printDataframe(df)
+                print()
+                print()
+                end = time.time()
+                print("The time of execution of above program is :", (end-start) * 10**3, "ms")
+            else :
+                with console.status("[bold green]Fetching data...") as status:
+                    return_val_stats = [None]*2
+                    return_val_forecast = [None]*1
+                    #thread with returning df
+                    tstats = threading.Thread(target=scraper.generalStats, args=(ticker,return_val_stats))
+                    #thread with returning df
+                    tforecast = threading.Thread(target=scraper.forecastStock, args=(ticker,return_val_forecast))
 
-                #local cache feature
-                if sc.checkObjKey(ticker, FILENAME):
-                    print()
-                    console.print(sc.getObj(ticker, FILENAME).getTable())
-                    print()
-                    print()
-                    end = time.time()
-                    print("The time of execution of above program is :", (end-start) * 10**3, "ms")
-                    continue
+                    tstats.start()
+                    tforecast.start()
+                    tstats.join()
+                    tforecast.join()
 
-
-                return_val_stats = [None]*2
-                return_val_forecast = [None]*1
-                #thread with returning df
-                tstats = threading.Thread(target=scraper.generalStats, args=(ticker,return_val_stats))
-                #thread with returning df
-                tforecast = threading.Thread(target=scraper.forecastStock, args=(ticker,return_val_forecast))
-
-                tstats.start()
-                tforecast.start()
-                tstats.join()
-                tforecast.join()
-
-                if return_val_forecast[0] is None:
-                    continue
+                    if return_val_forecast[0] is None:
+                        continue
 
                 # create the data frame here then call a print dataframe to table function
-                df = __createDataframe(return_val_stats[1], return_val_stats[0],return_val_forecast[0])
-
+                datadict = __createValuesAndMetrics(return_val_stats[1], return_val_stats[0],return_val_forecast[0])
+                df = __createDataframe(datadict)
                 # this dataframe is the one that gets stored and see if its less memory
 
                 # turn df into table and print it
@@ -113,4 +115,4 @@ def run(list):
                 print()
 
                 # store the data frames then write a function that translates these dataframs
-                sc.setObj(ticker, FILENAME, df)
+                sc.setObj(ticker, FILENAME, datadict)

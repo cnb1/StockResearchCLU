@@ -13,6 +13,7 @@ filename = 'filename'
 
 
 # TODO 
+# - Find way to store the data in cache using json instead of pickle
 # - Dont store the rich table store the dataframes instead rich tables is ~1.4MB
 # - make scraper better for forecast for tag MuiCardContent-root
 # - do financials
