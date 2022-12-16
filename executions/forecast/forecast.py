@@ -19,6 +19,45 @@ import cache.stockCache as sc
 
 FILENAME = 'forecast'
 
+def __createDataframe(header, values, forecast):
+    dataMetric = []
+    dataValue = []
+
+    dataMetric.append('Stock')
+    dataValue.append(header.head(1).iloc[0].iloc[0])
+
+    for i in range(len(values.columns)):
+        dataMetric.append(values.columns[i])
+        dataValue.append(values.iloc[0].iloc[i])
+    
+    for i in range(len(forecast.columns)):
+        dataMetric.append(forecast.columns[i])
+        dataValue.append(forecast.iloc[0].iloc[i])
+
+    data = {
+        'Metrics': dataMetric,
+        'Values': dataValue
+    }
+
+    dfdata = pd.DataFrame(data)
+    return dfdata
+
+def __printDataframe(df):
+    print('dataframe: \n', df)
+    # table = Table(title=return_val_stats[1].head(1).iloc[0].iloc[0])
+
+    # table.add_column('Metric', style='dodger_blue2', no_wrap=True)
+    # table.add_column('Value', style='deep_sky_blue1', no_wrap=True)
+
+    # for i in range(len(return_val_stats[0].columns)):
+    #     table.add_row(return_val_stats[0].columns[i], return_val_stats[0].iloc[0].iloc[i])
+
+    # for i in range(len(return_val_forecast[0].columns)):
+    #     table.add_row(return_val_forecast[0].columns[i], return_val_forecast[0].iloc[0].iloc[i])
+
+    # print()
+    # console.print(table)
+
 def run(list):
     isRun = True
     console = Console()
@@ -60,23 +99,18 @@ def run(list):
                 if return_val_forecast[0] is None:
                     continue
 
-                table = Table(title=return_val_stats[1].head(1).iloc[0].iloc[0])
+                # create the data frame here then call a print dataframe to table function
+                df = __createDataframe(return_val_stats[1], return_val_stats[0],return_val_forecast[0])
 
-                table.add_column('Metric', style='dodger_blue2', no_wrap=True)
-                table.add_column('Value', style='deep_sky_blue1', no_wrap=True)
+                # this dataframe is the one that gets stored and see if its less memory
 
-                for i in range(len(return_val_stats[0].columns)):
-                    table.add_row(return_val_stats[0].columns[i], return_val_stats[0].iloc[0].iloc[i])
-
-                for i in range(len(return_val_forecast[0].columns)):
-                    table.add_row(return_val_forecast[0].columns[i], return_val_forecast[0].iloc[0].iloc[i])
-
-                print()
-                console.print(table)
+                # turn df into table and print it
+                __printDataframe(df)
 
                 end = time.time()
                 print("The time of execution of above program is :", (end-start) * 10**3, "ms")
                 print()
                 print()
 
-                sc.setObj(ticker, FILENAME, table)
+                # store the data frames then write a function that translates these dataframs
+                sc.setObj(ticker, FILENAME, df)
