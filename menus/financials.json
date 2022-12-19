@@ -1,0 +1,9 @@
+{
+    "name": "financials",
+    "executions" : [
+        "income"
+    ],
+    "income": {
+        "filename": "executions.financials.income"
+    }
+}

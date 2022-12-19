@@ -68,7 +68,7 @@ def run(list):
     
     while isRun: #and (console.status("[bold green]Fetching data...") as status):
         ticker = input(Fore.YELLOW + pf.createConsole(list, 'forecast/[Enter Ticker]') + Fore.WHITE)
-        if ticker == "!q":
+        if ticker == "!q" or ticker == "..":
             isRun = False
         else:
         
