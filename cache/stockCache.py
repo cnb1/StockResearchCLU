@@ -5,9 +5,11 @@ import pickle as p
 from datetime import date
 import datetime
 from colorama import Fore
+import json
+from rich.console import Console
+import time
 
-import sys
-sys.setrecursionlimit(10000)
+
 CACHE_UPDATE_TIME_IN_DAYS = 7
 __cache = {}
 __toStore = {}
@@ -24,13 +26,19 @@ class CacheTable:
         return self.time
 
 def load():
-    if os.path.exists(currentdir + '/cache.pickle') and os.stat(currentdir + '/cache.pickle').st_size != 0:
+    if os.path.exists(currentdir + '/cache.txt') and os.stat(currentdir + '/cache.txt').st_size != 0:
         print(Fore.GREEN + '[Cache file exists]'+ Fore.WHITE)
-        with open(currentdir + '/cache.pickle', 'rb') as testpick:
-            dict = p.load(testpick)
+        with open(currentdir + '/cache.txt', 'r') as testpick:
+            data = json.load(testpick)
 
-            print('testing')
-            print(dict)
+            dict = {}
+            dictStore = {}
+
+            for i in data:
+                o = CacheTable(data[i]['table'], datetime.datetime.strptime(data[i]['time'], '%Y-%m-%d').date())
+                ostore = CacheTable(data[i]['table'], data[i]['time'])
+                dict[i] = o
+                dictStore[i] = ostore
 
             # need to filter out the dict for outdated times
             today = date.today()
@@ -49,15 +57,20 @@ def load():
                 dict.pop(key, None)
             
             __cache.update(dict)
+            __toStore.update(dictStore)
+
     else:
         print(Fore.RED + '[Cache file doesn`t exists OR is empty]'+ Fore.WHITE)
 
 
 def save():
-    print('saving files')
-    print(__cache)
-    with open(currentdir + '/cache.pickle', 'wb') as write_cache:
-        p.dump(__cache, write_cache)
+    console = Console()
+
+    with console.status("[bold yellow]Saving cache...") as status:
+        time.sleep(1)
+        with open(currentdir + '/cache.txt', 'w') as jsonload:
+            jsonload.write(json.dumps(__toStore))
+
 
 def createKey(ticker, filename):
     return ticker + '-' + filename
@@ -74,8 +87,9 @@ def setObj(ticker, filename, table):
     key = createKey(ticker, filename)
     if not (checkObjKey(ticker, filename)):
         o = CacheTable(table, date.today())
+        ostore = CacheTable(table, str(date.today()))
         __cache[key] = o
-        print(table)
+        __toStore[key] = ostore.__dict__
         save()
 
 

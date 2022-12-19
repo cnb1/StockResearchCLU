@@ -17,6 +17,59 @@ dfcol = [MIN_FORECAST, AVG_FORECAST, MAX_FORECAST,
         A1YF + ' EPS', A2YF + ' EPS', A3YF + ' EPS',
         A1YF + ' Rev', A2YF + ' Rev', A3YF + ' Rev']
 
+def buildTags(tags):
+
+    isRev1 = False
+    isRev2 = False
+    isRev3 = False
+    dfdata = []
+
+    for tag in tags:
+
+        if MIN_FORECAST in tag.text:
+            dfdata.append(tag.contents[1].contents[0].contents[0].contents[0].text)
+            dfdata.append(tag.contents[1].contents[0].contents[0].contents[1].contents[0].text)
+
+
+        if AVG_FORECAST in tag.text:
+            dfdata.append(tag.contents[1].contents[1].contents[0].contents[0].text)
+            dfdata.append(tag.contents[1].contents[1].contents[0].contents[1].contents[0].text)
+
+        if MAX_FORECAST in tag.text:
+            dfdata.append(tag.contents[1].contents[2].contents[0].contents[0].text)
+            dfdata.append(tag.contents[1].contents[2].contents[0].contents[1].contents[0].text)
+
+        if A1YF in tag.text:
+            if not isRev1:
+                dfdata.append(tag.contents[1].contents[0].contents[0].contents[0].text + ' EPS')
+                dfdata.append(tag.contents[1].contents[0].contents[0].contents[1].contents[0].text)
+                isRev1 = True
+            else:
+                dfdata.append(tag.contents[1].contents[0].contents[0].contents[0].text + ' Rev')
+                dfdata.append(tag.contents[1].contents[0].contents[0].contents[1].contents[0].text)
+
+
+        if A2YF in tag.text:
+            if not isRev2:
+                dfdata.append(tag.contents[1].contents[1].contents[0].contents[0].text + ' EPS')
+                dfdata.append(tag.contents[1].contents[1].contents[0].contents[1].contents[0].text)
+                isRev2 = True
+            else:
+                dfdata.append(tag.contents[1].contents[1].contents[0].contents[0].text + ' Rev')
+                dfdata.append(tag.contents[1].contents[1].contents[0].contents[1].contents[0].text)
+
+        if A2YF in tag.text:
+            if not isRev3:
+                dfdata.append(tag.contents[1].contents[2].contents[0].contents[0].text + ' EPS')
+                dfdata.append(tag.contents[1].contents[2].contents[0].contents[1].contents[0].text)
+                isRev3 = True
+            else:
+                dfdata.append(tag.contents[1].contents[2].contents[0].contents[0].text + ' Rev')
+                dfdata.append(tag.contents[1].contents[2].contents[0].contents[1].contents[0].text)
+            
+    return dfdata
+
+    
 def forecastStock(ticker, return_val) :
 
     url = 'https://www.wallstreetzen.com/stocks/us/nasdaq/' + str(ticker) + '/stock-forecast'
@@ -24,70 +77,29 @@ def forecastStock(ticker, return_val) :
     data = requests.get(url)
 
     html = bs(data.text, 'html.parser')
-    tags = html.find_all('div', {"class": "jss172"})
+    tags = html.find_all('div', {"class": "MuiCardContent-root"})
 
     if tags == None or len(tags) == 0:
         url = 'https://www.wallstreetzen.com/stocks/us/nyse/' + str(ticker) + '/stock-forecast'
         data = requests.get(url)
 
         html = bs(data.text, 'html.parser')
-        tags = html.find_all('div', {"class": "jss172"})
+        tags = html.find_all('div', {"class": "MuiCardContent-root"})
 
     if tags == None or len(tags) == 0:
         return
 
-
-    isRev1 = False
-    isRev2 = False
-    isRev3 = False
-
-    dfdata = []
-
-
-    for tag in tags:
-        temp = tag.find_next(string=True)
-        tempval = tag.contents[1].find_next(string=True)
-
-
-        if temp == MIN_FORECAST:
-            dfdata.append(tempval)
-
-        elif temp == AVG_FORECAST:
-            dfdata.append(tempval)
-
-        elif temp == MAX_FORECAST:
-            dfdata.append(tempval)
-
-        elif temp == A1YF:
-            if not isRev1 :
-                isRev1 = True
-                dfdata.append(tempval)
-            else:
-                dfdata.append(tempval)
-                
-        elif temp == A2YF:
-            if not isRev2 :
-                isRev2 = True
-                dfdata.append(tempval)
-            else:
-                dfdata.append(tempval)
-
-        elif temp == A3YF:
-            if not isRev3 :
-                isRev3 = True
-                dfdata.append(tempval)
-            else:
-                dfdata.append(tempval)
-
+    dfdata = buildTags(tags)
 
     dict = {}
-    for i in range(len(dfcol)):
-        dict[dfcol[i]] = [dfdata[i]]
+    for i in range(0, len(dfdata), 2):
+        dict[dfdata[i]] = [dfdata[i+1]]
+        
     df = pd.DataFrame(data=dict)
-    return_val[0] = df
-    # print()
     # print(Fore.LIGHTCYAN_EX + tabulate(df, headers='keys', tablefmt="double_outline") + Fore.WHITE)
-    # print()
+    print()
+
+    return_val[0] = df
 
 
 def generalStats(ticker, return_val):
