@@ -48,7 +48,6 @@ def buildTags(tags):
                 dfdata.append(tag.contents[1].contents[0].contents[0].contents[0].text + ' Rev')
                 dfdata.append(tag.contents[1].contents[0].contents[0].contents[1].contents[0].text)
 
-
         if A2YF in tag.text:
             if not isRev2:
                 dfdata.append(tag.contents[1].contents[1].contents[0].contents[0].text + ' EPS')
@@ -58,7 +57,7 @@ def buildTags(tags):
                 dfdata.append(tag.contents[1].contents[1].contents[0].contents[0].text + ' Rev')
                 dfdata.append(tag.contents[1].contents[1].contents[0].contents[1].contents[0].text)
 
-        if A2YF in tag.text:
+        if A3YF in tag.text:
             if not isRev3:
                 dfdata.append(tag.contents[1].contents[2].contents[0].contents[0].text + ' EPS')
                 dfdata.append(tag.contents[1].contents[2].contents[0].contents[1].contents[0].text)

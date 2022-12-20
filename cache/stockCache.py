@@ -36,9 +36,8 @@ def load():
 
             for i in data:
                 o = CacheTable(data[i]['table'], datetime.datetime.strptime(data[i]['time'], '%Y-%m-%d').date())
-                ostore = CacheTable(data[i]['table'], data[i]['time'])
                 dict[i] = o
-                dictStore[i] = ostore
+                dictStore[i] = data[i]
 
             # need to filter out the dict for outdated times
             today = date.today()
