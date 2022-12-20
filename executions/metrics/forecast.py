@@ -54,7 +54,8 @@ def __printDataframe(df):
     table.add_column(VALUES, style='deep_sky_blue1', no_wrap=True)
 
     for i in range(len(df.index)):
-        table.add_row(df[METRICS].iloc[i], df[VALUES].iloc[i])
+        if df[METRICS].iloc[i] != 'Stock':
+            table.add_row(df[METRICS].iloc[i], df[VALUES].iloc[i])
 
 
     print()

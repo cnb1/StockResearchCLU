@@ -14,6 +14,12 @@ filename = 'filename'
 
 
 # TODO
+# - add
+#   price chart forecast
+#   revenue chart
+#   eps chart
+#   p/s chart -> MC/Rev1 2 & 3
+#   p/e chart -> price/e1 2 & 3
 # - check to make sure date is working
 # - get current eps
 # - use termoplot to plot the rev and eps estimates
@@ -75,12 +81,10 @@ if __name__ == "__main__":
         if command == "!q":
             isRun = False
         elif "-" in command:
-            print('super is called')
             if command in supersdict:
                 t = threading.Thread(target=__super_func, args=(supersdict[command],))
                 t.start()
                 t.join()
-                print('end super')
             else:
                 print(Fore.RED + "Super command not found" + Fore.WHITE)
         elif command == "ls":

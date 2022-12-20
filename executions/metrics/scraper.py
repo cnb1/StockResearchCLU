@@ -133,11 +133,21 @@ def generalStats(ticker, return_val):
     dict = {}
     price = ticker.upper() + ' Price'
     rev = 'Revenue'
+    pe = 'P/E'
+    mc = 'Market Cap'
 
     for i in range(len(spanstitle)):
-        if spanstitle[i].find_next(string=True) == price or spanstitle[i].find_next(string=True) == rev:
+        if spanstitle[i].find_next(string=True) == price:
+            dict[spanstitle[i].find_next(string=True)] = [spansval[i].find_next(string=True)]
+        if spanstitle[i].find_next(string=True) == rev:
+            dict[spanstitle[i].find_next(string=True)] = [spansval[i].find_next(string=True)]
+        if spanstitle[i].find_next(string=True) == pe:
+            dict[spanstitle[i].find_next(string=True)] = [spansval[i].find_next(string=True)]
+        if spanstitle[i].find_next(string=True) == mc:
             dict[spanstitle[i].find_next(string=True)] = [spansval[i].find_next(string=True)]
 
+
+    dict['EPS'] = str(round(float(dict[price][0][1:])/float(dict[pe][0][:len(dict[pe][0])-1]),2))
     df = pd.DataFrame(data=dict)
     return_val[0] = df
     return_val[1] = dftitle
