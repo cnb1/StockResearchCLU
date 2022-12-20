@@ -28,7 +28,8 @@ def __createDictToStore(title, header, rows):
 
 def __dictToTable(data):
     console = Console()
-    table = Table(title=data['title'] + ' Income Statement', expand=True)
+    table = Table(title=data['title'] + ' Income Statement', expand=True, header_style='chartreuse1',
+                    show_lines=True)
 
     for i in range(len(data['header'])):
         table.add_column(data['header'][i], style='bright_white', no_wrap=True)
@@ -61,7 +62,6 @@ def run(list):
                 __dictToTable(tabledict)
                 print('\n')
             else:
-                print('income doesnt exist')
                 title, header, rows = scraper.getIncome(ticker)
 
                 # turn rows and columns into table
