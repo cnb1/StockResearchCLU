@@ -12,8 +12,36 @@ from rich.table import Table
 import cache.stockCache as sc
 import scraper
 
+# grab data from scraper
+# store it all in a dict to be stored and grabbed and printed
+
+FILENAME = 'income'
+
+def __createDictToStore(title, header, rows):
+    data = {
+        'title': title,
+        'header': header,
+        'rows': rows
+    }
+
+    return data
+
+def __dictToTable(data):
+    console = Console()
+    table = Table(title=data['title'] + ' Income Statement', expand=True)
+
+    for i in range(len(data['header'])):
+        table.add_column(data['header'][i], style='bright_white', no_wrap=True)
+    
+    for i in range(len(data['rows'])):
+        table.add_row(data['rows'][i][0], data['rows'][i][1],
+                            data['rows'][i][2], data['rows'][i][3],
+                            data['rows'][i][4], data['rows'][i][5])
+
+    console.print(table)
+
+
 def run(list):
-    print('income')
     isRun = True
     console = Console()
 
@@ -26,7 +54,26 @@ def run(list):
             # here check cache for dataframe
             start = time.time()
             
-            scraper.getIncome(ticker)
+            # check if the income is already in the cache
+            if sc.checkObjKey(ticker, FILENAME) :
+                print()
+                tabledict = sc.getObj(ticker, FILENAME).getTable()
+                __dictToTable(tabledict)
+                print('\n')
+            else:
+                print('income doesnt exist')
+                title, header, rows = scraper.getIncome(ticker)
+
+                # turn rows and columns into table
+                data = __createDictToStore(title, header, rows)
+                # print the data
+                print()
+                __dictToTable(data)
+                print('\n')
+
+                #store in cache
+                sc.setObj(ticker, FILENAME, data)
+
 
             end = time.time()
             print("The time of execution of above program is :", (end-start) * 10**3, "ms")
