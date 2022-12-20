@@ -1,3 +1,4 @@
 {
-    "-f":"forecast"
+    "forecast":"-f",
+    "income":"-i"
 }

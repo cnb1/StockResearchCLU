@@ -10,7 +10,7 @@ import printFunctions as pf
 from rich.console import Console
 from rich.table import Table
 import cache.stockCache as sc
-import scraper
+import incomeScraper as scraper
 
 # grab data from scraper
 # store it all in a dict to be stored and grabbed and printed
@@ -28,7 +28,7 @@ def __createDictToStore(title, header, rows):
 
 def __dictToTable(data):
     console = Console()
-    table = Table(title=data['title'] + ' Income Statement', expand=True, header_style='chartreuse1',
+    table = Table(title=data['title'] + ' Income Statement', expand=True, header_style='bold deep_sky_blue3',
                     show_lines=True)
 
     for i in range(len(data['header'])):
@@ -38,7 +38,11 @@ def __dictToTable(data):
         if i % 2 != 0:
             table.add_row(data['rows'][i][0], data['rows'][i][1],
                                 data['rows'][i][2], data['rows'][i][3],
-                                data['rows'][i][4], data['rows'][i][5], style='dark_turquoise')            
+                                data['rows'][i][4], data['rows'][i][5], style='dark_turquoise')
+        else:
+            table.add_row(data['rows'][i][0], data['rows'][i][1],
+                                data['rows'][i][2], data['rows'][i][3],
+                                data['rows'][i][4], data['rows'][i][5])       
 
     console.print(table)
 

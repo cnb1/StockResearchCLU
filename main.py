@@ -1,10 +1,11 @@
 from concurrent.futures import thread
 import json
+from re import I
 import threading
 import importlib
 from colorama import Fore
 from rich.console import Console
-
+import os
 import printFunctions as pf
 import cache.stockCache as sc
 import time
@@ -29,6 +30,9 @@ def thread_func(command, menuList):
     tocall = importlib.import_module(menuList[command][filename])
     tocall.run(list)
 
+def __super_func(execution):
+    tocall = importlib.import_module(execution)
+    tocall.run(list)
 
 if __name__ == "__main__":
 
@@ -48,6 +52,19 @@ if __name__ == "__main__":
 
     mainfile = open('menus/main.json')
     mainjson = json.load(mainfile)
+    supersdict = {}
+
+    if os.stat('menus/supers.json').st_size != 0:
+        supersfile = open('menus/supers.json')
+        supersjson = json.load(supersfile)
+
+        for menu in mainjson['menus']:
+            tempfile = open('menus/'+menu+'.json')
+            tempjson = json.load(tempfile)
+
+            for exec in tempjson['executions']:
+                if exec in supersjson:
+                    supersdict[supersjson[exec]] = tempjson[exec]['filename']
 
     list.append(mainjson)
 
@@ -59,6 +76,13 @@ if __name__ == "__main__":
             isRun = False
         elif "-" in command:
             print('super is called')
+            if command in supersdict:
+                t = threading.Thread(target=__super_func, args=(supersdict[command],))
+                t.start()
+                t.join()
+                print('end super')
+            else:
+                print(Fore.RED + "Super command not found" + Fore.WHITE)
         elif command == "ls":
             print()
             pf.printMenus(list[list.__len__()-1])
