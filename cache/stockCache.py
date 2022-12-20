@@ -26,6 +26,7 @@ class CacheTable:
         return self.time
 
 def load():
+    isRemoved = False
     if os.path.exists(currentdir + '/cache.txt') and os.stat(currentdir + '/cache.txt').st_size != 0:
         print(Fore.GREEN + '[Cache file exists]'+ Fore.WHITE)
         with open(currentdir + '/cache.txt', 'r') as testpick:
@@ -45,21 +46,23 @@ def load():
             check = today - d
             toDelete = []
 
-            # now update
-            # __cache.update(dict)
-
             for key in dict.keys():
                 if check > dict[key].getTime():
                     toDelete.append(key)
                 
             for key in toDelete:
+                print(Fore.RED + 'Removing : ' + key + Fore.WHITE)
+                isRemoved = True
                 dict.pop(key, None)
+                dictStore.pop(key, None)
             
             __cache.update(dict)
             __toStore.update(dictStore)
 
     else:
         print(Fore.RED + '[Cache file doesn`t exists OR is empty]'+ Fore.WHITE)
+
+    return isRemoved
 
 
 def save():

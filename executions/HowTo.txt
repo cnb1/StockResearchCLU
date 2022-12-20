@@ -1,0 +1,5 @@
+1) Run method needs to be created
+2) Run method then calls the scraper module method
+3) Scraper module method returns the values stored as lists (usually)
+4) These lists are then stored as one dictionary and saved to cache
+5) this dictionary is then translated into a printable table

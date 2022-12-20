@@ -35,9 +35,10 @@ def __dictToTable(data):
         table.add_column(data['header'][i], style='bright_white', no_wrap=True)
     
     for i in range(len(data['rows'])):
-        table.add_row(data['rows'][i][0], data['rows'][i][1],
-                            data['rows'][i][2], data['rows'][i][3],
-                            data['rows'][i][4], data['rows'][i][5])
+        if i % 2 != 0:
+            table.add_row(data['rows'][i][0], data['rows'][i][1],
+                                data['rows'][i][2], data['rows'][i][3],
+                                data['rows'][i][4], data['rows'][i][5], style='dark_turquoise')            
 
     console.print(table)
 

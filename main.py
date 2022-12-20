@@ -13,18 +13,15 @@ filename = 'filename'
 
 
 # TODO
-# - do financials
+# - check to make sure date is working
+# - get current eps
+# - use termoplot to plot the rev and eps estimates
+# - do overall market valuations
+# - do rest of financials
 
-# - reduce the top DF to only have price eps and rev
+
 # - create feature so that i type dynamic and i can do -f ticker for forecast and -r ticker for ratios 
 #   allows me to switch between metrics and any of the rest of the commands each execution has its own unique key
-# - add financials feature
-# - add view stock chart feature
-# - create all in one report feature 
-# - add other features for forecast visualizations
-# - background thread that loads all last 7 days requested items and eliminates past
-#   7 days items. uses these items to reduce requests made (how to store python objects locally)
-# - stock market index valuations
 
 
 def thread_func(command, menuList):
@@ -39,7 +36,10 @@ if __name__ == "__main__":
     # load persistant cache
     with console.status("[bold green]Loading cache...") as status:
         time.sleep(2)
-        sc.load()
+        isRemoved = sc.load()
+    
+    if isRemoved:
+        sc.save()
 
     pf.printName()
 
@@ -57,6 +57,8 @@ if __name__ == "__main__":
 
         if command == "!q":
             isRun = False
+        elif "-" in command:
+            print('super is called')
         elif command == "ls":
             print()
             pf.printMenus(list[list.__len__()-1])
