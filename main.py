@@ -27,10 +27,6 @@ filename = 'filename'
 # - do rest of financials
 
 
-# - create feature so that i type dynamic and i can do -f ticker for forecast and -r ticker for ratios 
-#   allows me to switch between metrics and any of the rest of the commands each execution has its own unique key
-
-
 def thread_func(command, menuList):
 
     tocall = importlib.import_module(menuList[command][filename])
