@@ -66,8 +66,7 @@ def createConsole(list, added = None):
     else:
         return consoleout + '/' + added + ' > '
 
-def printGraph(labels, values):
-    console = Console()
+def createChart(title, labels, values):
     maxval = max(values)
     minval = min(values)
     
@@ -97,7 +96,7 @@ def printGraph(labels, values):
                 ltemp.append(' ')
         listlambda.insert(0,ltemp)
 
-    table = Table(title='Bar Chart', show_header=False, show_footer=True)
+    table = Table(title=title, show_header=False, show_footer=True)
     table.add_column(footer='Amount')
     for i in labels:
         table.add_column(footer=i)
@@ -105,10 +104,11 @@ def printGraph(labels, values):
     for i in listlambda:
         x = list(map(lambdafunction, i))
         table.add_row(*x)
+    
+    return table
 
-    console.print(table)
     
 
-if __name__ == '__main__':
-    print(int(round(4.3)))
-    printGraph(['a', 'b', 'c', 'd'],[1.5,2,3, 3.75])
+# if __name__ == '__main__':
+#     print(int(round(4.3)))
+#     printGraph(['a', 'b', 'c', 'd'],[1.5,2,3, 3.75])

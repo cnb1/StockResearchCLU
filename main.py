@@ -30,11 +30,11 @@ filename = 'filename'
 def thread_func(command, menuList):
 
     tocall = importlib.import_module(menuList[command][filename])
-    tocall.run(list)
+    tocall.run(context)
 
 def __super_func(execution):
     tocall = importlib.import_module(execution)
-    tocall.run(list)
+    tocall.run(context)
 
 if __name__ == "__main__":
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     pf.printName()
 
     isRun = True
-    list = []
+    context = []
 
     mainfile = open('menus/main.json')
     mainjson = json.load(mainfile)
@@ -68,11 +68,11 @@ if __name__ == "__main__":
                 if exec in supersjson:
                     supersdict[supersjson[exec]] = tempjson[exec]['filename']
 
-    list.append(mainjson)
+    context.append(mainjson)
 
     while isRun:
         
-        command = input(Fore.YELLOW + pf.createConsole(list) + Fore.WHITE)
+        command = input(Fore.YELLOW + pf.createConsole(context) + Fore.WHITE)
 
         if command == "!q":
             isRun = False
@@ -85,16 +85,16 @@ if __name__ == "__main__":
                 print(Fore.RED + "Super command not found" + Fore.WHITE)
         elif command == "ls":
             print()
-            pf.printMenus(list[list.__len__()-1])
+            pf.printMenus(context[context.__len__()-1])
             print()
         elif command == "..":
-            list.pop()
+            context.pop()
         else:
-            if pf.checkMenus(list, command, list[list.__len__()-1]) :
+            if pf.checkMenus(context, command, context[context.__len__()-1]) :
                 continue
             else :
-                if pf.checkExecutions(command, list[list.__len__()-1]):                    
-                    t = threading.Thread(target=thread_func, args=(command, list[list.__len__()-1]))
+                if pf.checkExecutions(command, context[context.__len__()-1]):                    
+                    t = threading.Thread(target=thread_func, args=(command, context[context.__len__()-1]))
                     t.start()
                     t.join()
                 else:

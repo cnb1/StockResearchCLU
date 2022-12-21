@@ -19,6 +19,15 @@ import cache.stockCache as sc
 FILENAME = 'forecast'
 METRICS = 'Metrics'
 VALUES = 'Values'
+SCALE_VAL = 10
+
+MIN_FORECAST = 'Min Forecast'
+AVG_FORECAST = 'Avg Forecast'
+MAX_FORECAST = 'Max Forecast'
+
+A1YF = 'Avg 1 year Forecast'
+A2YF = 'Avg 2 year Forecast'
+A3YF = 'Avg 3 year Forecast'
 
 def __createValuesAndMetrics(header, values, forecast):
     dataMetric = []
@@ -61,13 +70,48 @@ def __printDataframe(df):
     print()
     console.print(table)
 
-def run(list):
+
+
+def  __dataframeToDict(df):
+        d = {}
+        for i in df.values:
+            print(i)
+            d[i[0]]=i[1]
+
+        return d
+
+def __dollarsToFloat(s):
+    if '$' in s:
+        s = s.replace('$', '')
+    while ',' in s:
+        s = s.replace(',', '')
+    
+    return float(s)
+
+def __createForecastTables(ticker, dfdict):
+    priceforecastVal = [__dollarsToFloat(dfdict[ticker + ' Price']), __dollarsToFloat(dfdict[MIN_FORECAST]), 
+                        __dollarsToFloat(dfdict[AVG_FORECAST]), __dollarsToFloat(dfdict[MAX_FORECAST])]
+
+    priceforecastlabel = [ticker + ' Price', MIN_FORECAST, 
+                        AVG_FORECAST, MAX_FORECAST]
+
+    priceTable = pf.createChart('Price Forecast', priceforecastlabel, priceforecastVal)
+
+
+
+
+
+
+
+
+
+def run(context):
     isRun = True
     console = Console()
 
     
     while isRun: #and (console.status("[bold green]Fetching data...") as status):
-        ticker = input(Fore.YELLOW + pf.createConsole(list, 'forecast/[Enter Ticker]') + Fore.WHITE)
+        ticker = input(Fore.YELLOW + pf.createConsole(context, 'forecast/[Enter Ticker]') + Fore.WHITE)
         if ticker == "!q" or ticker == "..":
             isRun = False
         else:
@@ -79,6 +123,11 @@ def run(list):
             if sc.checkObjKey(ticker, FILENAME):
                 print()
                 df = __createDataframe(sc.getObj(ticker, FILENAME).getTable())
+                dfdict = __dataframeToDict(df)
+                priceTable, revenueTable = __createForecastTables(ticker.upper(), dfdict)
+
+                console.print(priceTable)
+
                 __printDataframe(df)
                 print()
                 print()
@@ -104,6 +153,7 @@ def run(list):
                 # create the data frame here then call a print dataframe to table function
                 datadict = __createValuesAndMetrics(return_val_stats[1], return_val_stats[0],return_val_forecast[0])
                 df = __createDataframe(datadict)
+                dfdict = __dataframeToDict(df)
                 # this dataframe is the one that gets stored and see if its less memory
 
                 # turn df into table and print it

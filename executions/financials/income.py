@@ -47,13 +47,13 @@ def __dictToTable(data):
     console.print(table)
 
 
-def run(list):
+def run(context):
     isRun = True
     console = Console()
 
     
     while isRun: #and (console.status("[bold green]Fetching data...") as status):
-        ticker = input(Fore.YELLOW + pf.createConsole(list, 'forecast/[Enter Ticker]') + Fore.WHITE)
+        ticker = input(Fore.YELLOW + pf.createConsole(context, 'forecast/[Enter Ticker]') + Fore.WHITE)
         if ticker == "!q" or ticker == "..":
             isRun = False
         else:
