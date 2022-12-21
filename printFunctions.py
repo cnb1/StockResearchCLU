@@ -1,8 +1,12 @@
+from xxlimited import foo
 from colorama import Fore
 import json
+from rich.console import Console
+from rich.table import Table
 
 menus = "menus"
 executions = "executions"
+SCALE_VAL = 10
 
 def printName():
     print("""
@@ -61,3 +65,50 @@ def createConsole(list, added = None):
         return consoleout + ' > '
     else:
         return consoleout + '/' + added + ' > '
+
+def printGraph(labels, values):
+    console = Console()
+    maxval = max(values)
+    minval = min(values)
+    
+    scale = (maxval - minval) / SCALE_VAL
+    totals = []
+
+    print(scale)
+
+    for i in values:
+        totals.append(int(round((i-minval)/scale)))
+    print(totals)
+
+    lambdafunction = lambda x : ((lambda: x, lambda: ' ')[x==' '], lambda: '#')[x=='#']()
+    listlambda = []
+
+    listlambda.append([str(round(minval, 2)),'#', '#', '#', '#'])
+    # minval = minval - scale
+    for i in range(SCALE_VAL):
+        ltemp=[]
+        ltemp.append(str(round(minval + scale, 2)))
+        minval = minval + scale
+        for j in range(len(totals)):
+            if totals[j] != 0:
+                ltemp.append('#')
+                totals[j] = totals[j]-1
+            else:
+                ltemp.append(' ')
+        listlambda.insert(0,ltemp)
+
+    table = Table(title='Bar Chart', show_header=False, show_footer=True)
+    table.add_column(footer='Amount')
+    for i in labels:
+        table.add_column(footer=i)
+
+    for i in listlambda:
+        x = list(map(lambdafunction, i))
+        table.add_row(*x)
+
+    console.print(table)
+    
+
+if __name__ == '__main__':
+    print(int(round(4.3)))
+    printGraph(['a', 'b', 'c', 'd'],[1.5,2,3, 3.75])
