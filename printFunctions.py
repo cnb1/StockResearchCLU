@@ -9,7 +9,7 @@ SCALE_VAL = 10
 BAR_LEN = 12
 BAR_TOKEN = '■'
 BAR_ROW = BAR_TOKEN * BAR_LEN
-TABLE_WIDTH = 94
+TABLE_WIDTH = 100
 
 def printName():
     print("""
@@ -97,10 +97,10 @@ def createChart(title, labels, values):
         listlambda.insert(0,ltemp)
 
     table = Table(title=title, show_header=False, show_footer=True, show_edge=False, width=TABLE_WIDTH,
-                    title_style='red')
-    table.add_column(footer='Amount', style='green')
+                    title_style='bright_red')
+    table.add_column(footer='Amount', style='bright_green')
     for i in labels:
-        table.add_column(footer=i, style='blue')
+        table.add_column(footer=i, style='bright_blue')
 
     for i in listlambda:
         x = list(map(lambdafunction, i))

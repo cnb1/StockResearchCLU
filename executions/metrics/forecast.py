@@ -34,9 +34,9 @@ A1YF = 'Avg 1 year Forecast'
 A2YF = 'Avg 2 year Forecast'
 A3YF = 'Avg 3 year Forecast'
 
-A1YFT = 'Avg Proj.'
-A2YFT = 'Avg Proj.'
-A3YFT = 'Avg Proj.'
+A1YFT = '1Y Avg Proj.'
+A2YFT = '2Y Avg Proj.'
+A3YFT = '3Y Avg Proj.'
 
 TITLE_YRS = "(Current, 1 Year, 2 Year, 3 Year)"
 
@@ -90,11 +90,12 @@ def  __dataframeToDict(df):
         return d
 
 def __dollarsToFloat(s):
-    s = float(re.sub(r'[^0-9.]', '', s))
+    s = round(float(re.sub(r'[^0-9.]', '', s)), 2)
     return s
 
 
 def __createForecastTables(ticker, dfdict):
+    ## price 
     priceforecastVal = [__dollarsToFloat(dfdict[ticker + ' Price']), __dollarsToFloat(dfdict[MIN_FORECAST]), 
                         __dollarsToFloat(dfdict[AVG_FORECAST]), __dollarsToFloat(dfdict[MAX_FORECAST])]
 
@@ -105,6 +106,8 @@ def __createForecastTables(ticker, dfdict):
 
     priceTable = pf.createChart(ticker + ' Price Forecast ' + TITLE_YRS, priceforecastLabel, priceforecastVal)
 
+
+    ## revenue
     revforecastVal = [__dollarsToFloat(dfdict['Revenue']), __dollarsToFloat(dfdict[A1YF + ' Rev']), 
                         __dollarsToFloat(dfdict[A2YF + ' Rev']), __dollarsToFloat(dfdict[A3YF + ' Rev'])]
     
@@ -115,12 +118,59 @@ def __createForecastTables(ticker, dfdict):
 
     revenueTable = pf.createChart(ticker + ' Revenue Forecast ' + TITLE_YRS, revforecastLabel, revforecastVal)
 
-    return priceTable, revenueTable
+    ## EPS
+    epsforecastVal = [__dollarsToFloat(dfdict['EPS']), __dollarsToFloat(dfdict[A1YF + ' EPS']), 
+                        __dollarsToFloat(dfdict[A2YF + ' EPS']), __dollarsToFloat(dfdict[A3YF + ' EPS'])]
+    
+    epsforecastLabel = ['EPS : ' + str(__dollarsToFloat(dfdict['EPS'])),
+                        A1YFT + ' : ' + str(__dollarsToFloat(dfdict[A1YF + ' EPS'])),
+                        A2YFT + ' : ' + str(__dollarsToFloat(dfdict[A2YF + ' EPS'])),
+                        A3YFT + ' : ' + str(__dollarsToFloat(dfdict[A3YF + ' EPS']))]
 
-def __printCharts(console, price, rev):
-    console.print(price)
-    print()
-    console.print(rev)
+    epsTable = pf.createChart(ticker + ' EPS Forecast ' + TITLE_YRS, epsforecastLabel, epsforecastVal)
+
+    ## P/E
+    peforecastVal = [__dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict['EPS']),
+                    __dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict[A1YF + ' EPS']),
+                    __dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict[A2YF + ' EPS']),
+                    __dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict[A3YF + ' EPS'])]
+    
+    peforecastLabel = ['P/E : ' + str(round(__dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict['EPS']), 2)),
+                        A1YFT + ' : ' + str(round(__dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict[A1YF + ' EPS']), 2)),
+                        A2YFT + ' : ' + str(round(__dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict[A2YF + ' EPS']), 2)),
+                        A3YFT + ' : ' + str(round(__dollarsToFloat(dfdict[ticker + ' Price'])/__dollarsToFloat(dfdict[A3YF + ' EPS']), 2))]
+
+    peTable = pf.createChart(ticker + ' P/E Forecast ' + TITLE_YRS, peforecastLabel, peforecastVal)
+
+    ## P/S
+    psforecastVal = [__dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict['Revenue']),
+                    __dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict[A1YF + ' Rev']),
+                    __dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict[A2YF + ' Rev']),
+                    __dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict[A3YF + ' Rev'])]
+    
+    psforecastLabel = ['P/S : ' + str(round(__dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict['Revenue']), 2)),
+                        A1YFT + ' : ' + str(round(__dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict[A1YF + ' Rev']), 2)),
+                        A2YFT + ' : ' + str(round(__dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict[A2YF + ' Rev']), 2)),
+                        A3YFT + ' : ' + str(round(__dollarsToFloat(dfdict['Market Cap'])/__dollarsToFloat(dfdict[A3YF + ' Rev']), 2))]
+
+    psTable = pf.createChart(ticker + ' P/S Forecast ' + TITLE_YRS, psforecastLabel, psforecastVal)
+
+
+
+
+
+
+    return priceTable, revenueTable, epsTable, peTable, psTable
+
+def __printCharts(console, price, rev, eps, pe, ps):
+    table = Table(title = 'FORECASTS', leading=2, show_header=False, show_edge=False)
+    table.add_column('PRICE PROJECTION', justify='center')
+    table.add_column('REVENUE PROJECTION', justify='center')
+    table.add_row(price)
+    table.add_row(rev, eps)
+    table.add_row(ps, pe)
+    ## add row EPS
+    console.print(table)
 
 
 
@@ -144,11 +194,11 @@ def run(context):
                 print()
                 df = __createDataframe(sc.getObj(ticker, FILENAME).getTable())
                 dfdict = __dataframeToDict(df)
-                priceTable, revenueTable = __createForecastTables(ticker.upper(), dfdict)
+                priceTable, revenueTable, epsTable, peTable, psTable = __createForecastTables(ticker.upper(), dfdict)
 
-                __printCharts(console, priceTable, revenueTable)
+                __printCharts(console, priceTable, revenueTable, epsTable, peTable, psTable)
 
-                __printDataframe(df)
+                # __printDataframe(df)
                 print()
                 print()
                 end = time.time()
@@ -175,12 +225,12 @@ def run(context):
                 df = __createDataframe(datadict)
                 dfdict = __dataframeToDict(df)
 
-                priceTable, revenueTable = __createForecastTables(ticker.upper(), dfdict)
+                priceTable, revenueTable, epsTable, peTable, psTable = __createForecastTables(ticker.upper(), dfdict)
 
-                __printCharts(console, priceTable, revenueTable)
+                __printCharts(console, priceTable, revenueTable, epsTable, peTable, psTable)
 
                 # turn df into table and print it
-                __printDataframe(df)
+                # __printDataframe(df)
 
                 end = time.time()
                 print("The time of execution of above program is :", (end-start) * 10**3, "ms")
