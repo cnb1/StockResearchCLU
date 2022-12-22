@@ -6,6 +6,10 @@ from rich.table import Table
 menus = "menus"
 executions = "executions"
 SCALE_VAL = 10
+BAR_LEN = 12
+BAR_TOKEN = '■'
+BAR_ROW = BAR_TOKEN * BAR_LEN
+TABLE_WIDTH = 94
 
 def printName():
     print("""
@@ -72,16 +76,13 @@ def createChart(title, labels, values):
     scale = (maxval - minval) / SCALE_VAL
     totals = []
 
-    print(scale)
-
     for i in values:
         totals.append(int(round((i-minval)/scale)))
-    print(totals)
 
     lambdafunction = lambda x : ((lambda: x, lambda: ' ')[x==' '], lambda: '#')[x=='#']()
     listlambda = []
 
-    listlambda.append([str(round(minval, 2)),'#', '#', '#', '#'])
+    listlambda.append([str(round(minval, 2)), BAR_ROW, BAR_ROW, BAR_ROW, BAR_ROW])
     # minval = minval - scale
     for i in range(SCALE_VAL):
         ltemp=[]
@@ -89,16 +90,17 @@ def createChart(title, labels, values):
         minval = minval + scale
         for j in range(len(totals)):
             if totals[j] != 0:
-                ltemp.append('#')
+                ltemp.append(BAR_ROW)
                 totals[j] = totals[j]-1
             else:
                 ltemp.append(' ')
         listlambda.insert(0,ltemp)
 
-    table = Table(title=title, show_header=False, show_footer=True)
-    table.add_column(footer='Amount')
+    table = Table(title=title, show_header=False, show_footer=True, show_edge=False, width=TABLE_WIDTH,
+                    title_style='red')
+    table.add_column(footer='Amount', style='green')
     for i in labels:
-        table.add_column(footer=i)
+        table.add_column(footer=i, style='blue')
 
     for i in listlambda:
         x = list(map(lambdafunction, i))
