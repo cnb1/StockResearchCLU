@@ -1,4 +1,3 @@
-from xxlimited import foo
 from colorama import Fore
 import json
 from rich.console import Console
