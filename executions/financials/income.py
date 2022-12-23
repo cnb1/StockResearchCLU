@@ -11,6 +11,7 @@ from rich.console import Console
 from rich.table import Table
 import cache.stockCache as sc
 import incomeScraper as scraper
+import pyfiglet
 
 # grab data from scraper
 # store it all in a dict to be stored and grabbed and printed
@@ -28,7 +29,7 @@ def __createDictToStore(title, header, rows):
 
 def __dictToTable(data):
     console = Console()
-    table = Table(title=data['title'] + ' Income Statement', expand=True, header_style='bold deep_sky_blue3',
+    table = Table(title='Income Statement', expand=True, header_style='bold deep_sky_blue3',
                     show_lines=True)
 
     for i in range(len(data['header'])):
@@ -49,7 +50,6 @@ def __dictToTable(data):
 
 def run(context):
     isRun = True
-    console = Console()
 
     
     while isRun: #and (console.status("[bold green]Fetching data...") as status):
@@ -64,6 +64,9 @@ def run(context):
             if sc.checkObjKey(ticker, FILENAME) :
                 print()
                 tabledict = sc.getObj(ticker, FILENAME).getTable()
+                result = pyfiglet.figlet_format(tabledict['title'], width=os.get_terminal_size()[0])
+                print(result)
+                print('\n\n')
                 __dictToTable(tabledict)
                 print('\n')
             else:
@@ -72,7 +75,10 @@ def run(context):
                 # turn rows and columns into table
                 data = __createDictToStore(title, header, rows)
                 # print the data
-                print()
+
+                result = pyfiglet.figlet_format(data['title'], width=os.get_terminal_size()[0])
+                print(result)
+                print('\n\n')
                 __dictToTable(data)
                 print('\n')
 

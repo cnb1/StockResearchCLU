@@ -16,6 +16,7 @@ from rich.console import Console
 from rich.table import Table
 import cache.stockCache as sc
 import re
+import pyfiglet
 
 FILENAME = 'forecast'
 METRICS = 'Metrics'
@@ -163,7 +164,7 @@ def __createForecastTables(ticker, dfdict):
     return priceTable, revenueTable, epsTable, peTable, psTable
 
 def __printCharts(console, price, rev, eps, pe, ps):
-    table = Table(title = 'FORECASTS', leading=2, show_header=False, show_edge=False)
+    table = Table(leading=2, show_header=False, show_edge=False)
     table.add_column('PRICE PROJECTION', justify='center')
     table.add_column('REVENUE PROJECTION', justify='center')
     table.add_row(price)
@@ -194,6 +195,10 @@ def run(context):
                 print()
                 df = __createDataframe(sc.getObj(ticker, FILENAME).getTable())
                 dfdict = __dataframeToDict(df)
+                result = pyfiglet.figlet_format(dfdict['Stock'].split('Stock')[0].strip(), width=os.get_terminal_size()[0])
+                print(result)
+                print('\n\n')
+
                 priceTable, revenueTable, epsTable, peTable, psTable = __createForecastTables(ticker.upper(), dfdict)
 
                 __printCharts(console, priceTable, revenueTable, epsTable, peTable, psTable)
@@ -224,6 +229,10 @@ def run(context):
                 datadict = __createValuesAndMetrics(return_val_stats[1], return_val_stats[0],return_val_forecast[0])
                 df = __createDataframe(datadict)
                 dfdict = __dataframeToDict(df)
+
+                result = pyfiglet.figlet_format(return_val_stats[1].iloc[0]['Company'].split('Stock')[0].strip(), width=os.get_terminal_size()[0])
+                print(result)
+                print('\n\n')
 
                 priceTable, revenueTable, epsTable, peTable, psTable = __createForecastTables(ticker.upper(), dfdict)
 
