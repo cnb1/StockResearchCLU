@@ -14,17 +14,9 @@ filename = 'filename'
 
 
 # TODO
-# - add
-#   price chart forecast
-#   revenue chart
-#   eps chart
-#   p/s chart -> MC/Rev1 2 & 3
-#   p/e chart -> price/e1 2 & 3
-# - check to make sure date is working
-# - get current eps
-# - use termoplot to plot the rev and eps estimates
-# - do overall market valuations
-# - do rest of financials
+# add the quarterly financials
+# fix the issue with the dm fiancials
+#
 
 
 def thread_func(command, menuList):
