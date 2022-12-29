@@ -71,7 +71,7 @@ def createConsole(list, added = None):
 
 def createChart(title, labels, values):
     maxval = max(values)
-    minval = min(values)
+    minval = min(0, min(values))
     
     scale = (maxval - minval) / SCALE_VAL
     totals = []

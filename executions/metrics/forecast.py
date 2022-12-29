@@ -91,7 +91,7 @@ def  __dataframeToDict(df):
         return d
 
 def __dollarsToFloat(s):
-    s = round(float(re.sub(r'[^0-9.]', '', s)), 2)
+    s = round(float(re.sub(r'[^0-9.-]', '', s)), 2)
     return s
 
 
