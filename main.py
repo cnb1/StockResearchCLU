@@ -15,8 +15,8 @@ filename = 'filename'
 
 # TODO
 # add the quarterly financials
-# fix the issue with the dm fiancials
-#
+# fix the issue with the dm fiancials 
+# fix the -i clu prompt issue
 
 
 def thread_func(command, menuList):
